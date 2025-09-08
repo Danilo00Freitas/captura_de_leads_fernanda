@@ -48,14 +48,22 @@ document.getElementById("leadForm").addEventListener("submit", async (e) => {
     });
 
     if (response.ok) {
-      // Esconde formulário e mostra botão para download
-      document.getElementById("leadForm").classList.add("d-none");
-      document.getElementById("download").classList.remove("d-none");
-    } else {
-      alert("Erro ao enviar os dados. Tente novamente.");
-    }
-  } catch (error) {
-    console.error("Erro na requisição:", error);
-    alert("Erro de conexão. Tente novamente.");
-  }
+  // Esconde formulário
+  document.getElementById("leadForm").classList.add("d-none");
+  // Mostra botão
+  const downloadDiv = document.getElementById("download");
+  downloadDiv.classList.remove("d-none");
+
+  // Cria link de download temporário e dispara
+  const blob = await response.blob();
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "meu-arquivo.pdf";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  window.URL.revokeObjectURL(url);
+}
+
 });
